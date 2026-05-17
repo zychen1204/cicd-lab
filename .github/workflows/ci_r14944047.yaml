@@ -50,13 +50,13 @@ jobs:
             echo "Test results file not found"
             exit 1
           fi
-          
+
           FAILED_TESTS=$(jq '.numFailedTests // 0' test-results.json)
           FAILED_SUITES=$(jq '.numFailedTestSuites // 0' test-results.json)
-          
+
           if [ "$FAILED_TESTS" -gt 0 ] || [ "$FAILED_SUITES" -gt 0 ]; then
             echo "❌ Tests failed! Failed tests: $FAILED_TESTS, Failed suites: $FAILED_SUITES"
             exit 1
           fi
-          
+
           echo "✅ All tests passed!"
