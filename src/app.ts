@@ -9,7 +9,7 @@ export function buildApp(options: FastifyServerOptions = {}) {
   app.get('/', async () => {
     const response: { message: string; version: string } = {
       message: 'CI/CD Lab Fastify app is running',
-      version: 123 // ❌ TypeScript 型別錯誤：number 不能賦值給 string
+      version: process.env.APP_VERSION || 'dev' //回傳正確形別: String
     };
     return response;
   });
