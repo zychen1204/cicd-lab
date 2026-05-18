@@ -35,6 +35,29 @@ jobs:
       - name: Test
         run: npm test -- --reporter=junit --outputFile=test-results.xml
 
+      - name: Compute image tag
+        id: meta
+        run: |
+          BRANCH_NAME="${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}"
+
+          if [[ "$BRANCH_NAME" == release/* ]]; then
+            VERSION="${BRANCH_NAME#release/}"
+            IMAGE_TAG="release-${VERSION}"
+          else
+            IMAGE_TAG="sha-${GITHUB_SHA::7}"
+          fi
+
+          echo "branch_name=$BRANCH_NAME" >> "$GITHUB_OUTPUT"
+          echo "image_tag=$IMAGE_TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Print image metadata
+        run: |
+          echo "Branch: ${{ steps.meta.outputs.branch_name }}"
+          echo "Image tag: ${{ steps.meta.outputs.image_tag }}"
+
+      - name: Build Docker image
+        run: docker build -t my-app:${{ steps.meta.outputs.image_tag }} .
+
       - name: Publish test results
         uses: dorny/test-reporter@v1
         if: success() || failure()
