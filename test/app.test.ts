@@ -10,7 +10,7 @@ describe('Fastify app', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(response.json()).toEqual({ status: 'failed' }); // ❌ 故意改成錯誤的期望值
+    expect(response.json()).toEqual({ status: 'ok' });
     await app.close();
   });
 
